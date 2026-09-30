@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<script>document.documentElement.classList.add("js")</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Garaje Nueve · Taller mecánico en La Laguna</title>
+<meta name="description" content="Proyecto de portfolio (negocio ficticio): web de un taller con seguimiento de la reparación por matrícula, calculadora de mantenimiento y cita online.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#121417">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --grafito:#121417;
+    --grafito-2:#1B1E22;
+    --grafito-3:#262A2F;
+    --linea-o:#30353B;
+    --hormigon:#E6E5E1;
+    --hormigon-2:#D9D8D3;
+    --papel:#F4F3F0;
+    --tinta:#141619;
+    --gris:#6B7076;
+    --gris-claro:#9BA1A7;
+    --senal:#FFC21A;
+    --senal-osc:#E5A900;
+    --ok:#3DBE6B;
+    --titulos:"Barlow Condensed", Impact, sans-serif;
+    --texto:"Space Grotesk", system-ui, -apple-system, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, monospace;
+    --suave:cubic-bezier(.22,.8,.2,1);
+    --muelle:cubic-bezier(.34,1.35,.5,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:var(--hormigon);color:var(--tinta);font-family:var(--texto);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:clip}
+  a{color:inherit}
+  button,input,select{font:inherit;color:inherit}
+  button{background:none;border:0;cursor:pointer}
+  .envoltura{width:min(100% - 32px, 1240px);margin-inline:auto}
+  .etiqueta{font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris)}
+  h2{font-family:var(--titulos);font-weight:800;font-size:clamp(48px,7vw,104px);line-height:.88;text-transform:uppercase;letter-spacing:-.005em}
+  h2 em{font-style:normal;color:var(--senal-osc)}
+  :focus-visible{outline:2px solid var(--senal);outline-offset:3px}
+  .aviso-ficticio{background:var(--senal);color:#1a1400;font-size:13px;text-align:center;padding:7px 16px;font-weight:500}
+
+  /* Menú */
+  .menu{position:sticky;top:0;z-index:40;background:rgba(18,20,23,.86);backdrop-filter:blur(16px) saturate(150%);-webkit-backdrop-filter:blur(16px) saturate(150%);color:var(--papel);border-bottom:1px solid var(--linea-o)}
+  .menu .envoltura{height:64px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .marca{display:flex;align-items:center;gap:12px;text-decoration:none;font-family:var(--titulos);font-weight:800;font-size:26px;text-transform:uppercase;letter-spacing:.01em}
+  .marca i{display:grid;place-items:center;width:32px;height:32px;background:var(--senal);color:var(--grafito);font-style:normal;font-size:22px}
+  .menu nav{display:flex;align-items:center;gap:28px;font-size:15px}
+  .menu nav a{text-decoration:none;color:var(--gris-claro);transition:color .2s}
+  .menu nav a:hover{color:var(--papel)}
+  .menu nav a.btn{color:#1a1400}
+  .btn{display:inline-flex;align-items:center;gap:10px;height:52px;padding:0 22px;background:var(--senal);color:#1a1400;font-weight:600;font-size:15px;text-decoration:none;border-radius:4px;transition:background .2s,transform .1s}
+  .btn:hover{background:#ffd044}
+  .btn:active{transform:scale(.97)}
+  .btn.peq{height:40px;padding:0 16px;font-size:14px}
+  .btn.linea{background:transparent;color:inherit;box-shadow:inset 0 0 0 1.5px currentColor}
+  .btn.linea:hover{background:rgba(255,255,255,.06)}
+
+  /* Portada con seguimiento */
+  .portada{background:var(--grafito);color:var(--papel);padding:72px 0 88px;position:relative;overflow:hidden;isolation:isolate}
+  .portada::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,transparent 0 22px,rgba(255,194,26,.035) 22px 44px);z-index:-1}
+  .portada-rejilla{display:grid;grid-template-columns:1fr 480px;gap:64px;align-items:center}
+  .portada-rejilla > *{min-width:0}
+  h1{font-family:var(--titulos);font-weight:800;font-size:clamp(64px,10vw,160px);line-height:.84;text-transform:uppercase}
+  h1 span{display:block}
+  h1 .amarillo{color:var(--senal)}
+  .entrada{margin-top:28px;max-width:42ch;color:var(--gris-claro);font-size:18px}
+  .datos-portada{display:flex;gap:36px;flex-wrap:wrap;margin-top:40px;font-family:var(--mono);font-size:13px;color:var(--gris-claro)}
+  .datos-portada b{display:block;font-family:var(--titulos);font-size:40px;color:var(--papel);line-height:1;font-weight:700}
+
+  .seguimiento{background:var(--grafito-2);border:1px solid var(--linea-o);border-radius:10px;padding:26px;box-shadow:0 40px 80px -40px rgba(0,0,0,.7)}
+  .seguimiento h3{font-family:var(--titulos);font-size:32px;text-transform:uppercase;font-weight:700;line-height:1}
+  .seguimiento > p{font-size:14px;color:var(--gris-claro);margin-top:6px}
+  .matricula{display:flex;margin-top:20px;border-radius:6px;overflow:hidden;background:#fff;color:#111;box-shadow:0 0 0 2px #fff}
+  .matricula .eu{background:#1D4FBF;color:#fff;width:36px;display:grid;place-content:center;text-align:center;font-family:var(--mono);font-size:11px;font-weight:500;line-height:1.2}
+  .matricula .eu i{display:block;color:var(--senal);font-style:normal;font-size:10px;letter-spacing:-.5px}
+  .matricula input{flex:1;min-width:0;border:0;padding:0 14px;height:58px;font-family:var(--mono);font-size:26px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;background:transparent;outline:none}
+  .matricula button{background:var(--senal);color:#1a1400;font-weight:600;padding:0 18px;font-size:15px}
+  .pista-demo{font-size:13px;color:var(--gris);margin-top:10px}
+  .pista-demo button{color:var(--senal);text-decoration:underline;text-underline-offset:3px;font-size:13px}
+  .estado{margin-top:22px;display:none}
+  .estado.si{display:block}
+  .coche{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--linea-o)}
+  .coche b{font-size:17px}
+  .coche span{font-family:var(--mono);font-size:12px;color:var(--gris-claro)}
+  .barra-prog{height:6px;background:var(--grafito-3);border-radius:3px;overflow:hidden;margin:18px 0 6px}
+  .barra-prog i{display:block;height:100%;width:0;background:var(--senal);border-radius:3px;transition:width 1.2s var(--suave)}
+  .prog-txt{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;color:var(--gris-claro)}
+  .pasos-rep{list-style:none;margin-top:18px;display:grid;gap:0}
+  .pasos-rep li{display:grid;grid-template-columns:24px 1fr auto;gap:12px;align-items:start;padding:10px 0;position:relative;opacity:.45;transition:opacity .4s}
+  .pasos-rep li.hecho,.pasos-rep li.ahora{opacity:1}
+  .pasos-rep li::before{content:"";position:absolute;left:11px;top:30px;bottom:-10px;width:2px;background:var(--grafito-3)}
+  .pasos-rep li:last-child::before{display:none}
+  .pasos-rep li.hecho::before{background:var(--ok)}
+  .punto{width:24px;height:24px;border-radius:50%;border:2px solid var(--linea-o);display:grid;place-items:center;background:var(--grafito-2);position:relative;z-index:1}
+  .hecho .punto{background:var(--ok);border-color:var(--ok)}
+  .hecho .punto::after{content:"";width:9px;height:5px;border:solid #0b2414;border-width:0 0 2px 2px;transform:rotate(-45deg) translate(1px,-1px)}
+  .ahora .punto{border-color:var(--senal)}
+  .ahora .punto::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--senal);animation:late 1.4s ease-in-out infinite}
+  @keyframes late{50%{transform:scale(.6);opacity:.5}}
+  .pasos-rep b{display:block;font-size:15px;font-weight:600}
+  .pasos-rep small{display:block;font-size:13px;color:var(--gris-claro);margin-top:2px}
+  .pasos-rep time{font-family:var(--mono);font-size:12px;color:var(--gris-claro);white-space:nowrap}
+  .aprobar{margin-top:14px;padding:14px;border-radius:8px;background:rgba(255,194,26,.08);border:1px solid rgba(255,194,26,.35);display:none}
+  .aprobar.si{display:block}
+  .aprobar p{font-size:14px}
+  .aprobar p b{font-family:var(--mono)}
+  .aprobar div{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .aprobar .btn{height:42px;font-size:14px}
+
+  section{padding:120px 0}
+
+  /* Servicios y precios */
+  .srv-cab{display:flex;justify-content:space-between;align-items:end;gap:32px;flex-wrap:wrap;margin-bottom:40px}
+  .motores{display:inline-flex;background:var(--hormigon-2);border-radius:6px;padding:4px;gap:4px;flex-wrap:wrap}
+  .motores button{height:42px;padding:0 16px;border-radius:4px;font-size:15px;font-weight:500;color:var(--gris);transition:background .2s,color .2s}
+  .motores button[aria-pressed="true"]{background:var(--grafito);color:var(--papel)}
+  .tabla{border-top:3px solid var(--tinta)}
+  .fila{display:grid;grid-template-columns:1.3fr 1.6fr .7fr .6fr auto;gap:24px;align-items:center;padding:20px 0;border-bottom:1px solid var(--hormigon-2);transition:opacity .3s,background .2s}
+  .fila:hover{background:var(--papel)}
+  .fila h3{font-family:var(--titulos);font-weight:700;font-size:30px;text-transform:uppercase;line-height:1}
+  .fila p{font-size:15px;color:var(--gris)}
+  .fila .t{font-family:var(--mono);font-size:14px;color:var(--gris)}
+  .fila .precio{font-family:var(--titulos);font-weight:700;font-size:32px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .fila .precio small{font-family:var(--texto);font-size:13px;font-weight:400;color:var(--gris)}
+  .fila .reservar{font-size:14px;font-weight:600;padding:10px 14px;border:1.5px solid var(--tinta);border-radius:4px;transition:background .2s,color .2s}
+  .fila .reservar:hover{background:var(--tinta);color:var(--papel)}
+  .fila.no{opacity:.35}
+  .fila.no .reservar{visibility:hidden}
+  .nota-tabla{font-size:14px;color:var(--gris);margin-top:16px}
+
+  /* Mantenimiento */
+  .mant{background:var(--grafito);color:var(--papel)}
+  .mant .etiqueta{color:var(--gris-claro)}
+  .mant-rejilla{display:grid;grid-template-columns:.9fr 1.1fr;gap:64px;align-items:start}
+  .mant-rejilla > *{min-width:0}
+  .mant-form{display:grid;gap:26px;margin-top:40px}
+  .mant-form label{display:grid;gap:10px;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris-claro)}
+  .odometro{display:flex;align-items:center;gap:16px}
+  .odometro output{font-family:var(--mono);font-size:30px;color:var(--papel);min-width:7ch;text-align:right;font-variant-numeric:tabular-nums}
+  input[type=range]{flex:1;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:var(--grafito-3);outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;border-radius:4px;background:var(--senal);cursor:grab;border:0}
+  input[type=range]::-moz-range-thumb{width:26px;height:26px;border-radius:4px;background:var(--senal);cursor:grab;border:0}
+  .semaforo{display:grid;gap:10px}
+  .item{display:grid;grid-template-columns:14px 1fr auto;gap:14px;align-items:center;padding:16px 18px;border-radius:8px;background:var(--grafito-2);border:1px solid var(--linea-o);transition:border-color .3s}
+  .item i{width:14px;height:14px;border-radius:50%}
+  .item.rojo i{background:#FF5A4E;box-shadow:0 0 0 4px rgba(255,90,78,.18)}
+  .item.ambar i{background:var(--senal);box-shadow:0 0 0 4px rgba(255,194,26,.18)}
+  .item.verde i{background:var(--ok);box-shadow:0 0 0 4px rgba(61,190,107,.18)}
+  .item.rojo{border-color:rgba(255,90,78,.45)}
+  .item b{font-size:16px;font-weight:600}
+  .item small{display:block;font-size:13px;color:var(--gris-claro);margin-top:2px}
+  .item span{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+  .rojo span{color:#FF8A80}.ambar span{color:var(--senal)}.verde span{color:var(--ok)}
+  .resumen-mant{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:18px;padding-top:18px;border-top:1px solid var(--linea-o)}
+  .resumen-mant p{font-size:15px;color:var(--gris-claro)}
+  .resumen-mant p b{color:var(--papel)}
+
+  /* Cita */
+  .cita-rejilla{display:grid;grid-template-columns:.8fr 1.2fr;gap:64px;align-items:start}
+  .cita-rejilla > *{min-width:0}
+  .panel{background:var(--papel);border-radius:10px;padding:32px;border:1px solid var(--hormigon-2)}
+  .bloque + .bloque{margin-top:26px;padding-top:24px;border-top:1px solid var(--hormigon-2)}
+  .bloque h3{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--gris);margin-bottom:14px}
+  select.campo,input.campo{width:100%;height:52px;border:1.5px solid var(--hormigon-2);border-radius:6px;padding:0 14px;background:#fff;font-size:17px;outline:none;transition:border-color .2s}
+  .campo:focus{border-color:var(--tinta)}
+  .fichas{display:flex;gap:8px;flex-wrap:wrap}
+  .ficha{height:44px;padding:0 16px;border-radius:6px;border:1.5px solid var(--hormigon-2);background:#fff;font-size:15px;font-variant-numeric:tabular-nums;transition:border-color .2s,background .2s,color .2s,transform .1s}
+  .ficha:hover{border-color:var(--gris)}
+  .ficha:active{transform:scale(.96)}
+  .ficha[aria-pressed="true"]{background:var(--tinta);border-color:var(--tinta);color:var(--papel)}
+  .ficha:disabled{opacity:.35;cursor:default}
+  .ficha small{font-size:11px;color:var(--gris);margin-right:4px;text-transform:uppercase}
+  .ficha[aria-pressed="true"] small{color:var(--gris-claro)}
+  .res-cita{margin-top:24px;padding:18px;border-radius:8px;background:var(--hormigon);display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+  .res-cita p{font-size:15px}
+  .res-cita p span{color:var(--gris)}
+  .btn[aria-disabled="true"]{opacity:.35;pointer-events:none}
+  .ok-cita{display:none;margin-top:14px;padding:14px;border-radius:8px;background:#E3F3E8;color:#12391F;font-size:14px}
+  .ok-cita.si{display:block}
+  .promesas{display:grid;gap:14px;margin-top:32px}
+  .promesas div{display:flex;gap:14px;align-items:flex-start}
+  .promesas b{font-family:var(--titulos);font-size:24px;text-transform:uppercase;line-height:1}
+  .promesas p{font-size:15px;color:var(--gris)}
+  .promesas svg{flex:0 0 auto;margin-top:2px}
+
+  footer{background:var(--grafito);color:var(--gris-claro);padding:48px 0 56px;font-size:14px}
+  footer .envoltura{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap}
+  footer b{color:var(--papel);font-family:var(--titulos);font-size:28px;text-transform:uppercase;display:block;margin-bottom:6px}
+
+  .js .rev{opacity:0;transform:translateY(18px);transition:opacity .8s var(--suave),transform .8s var(--suave)}
+  .js .rev.visto{opacity:1;transform:none}
+
+  @media (max-width:1000px){
+    .menu nav a:not(.btn){display:none}
+    .portada{padding:44px 0 64px}
+    .portada-rejilla,.mant-rejilla,.cita-rejilla{grid-template-columns:1fr;gap:44px}
+    section{padding:88px 0}
+    .fila{grid-template-columns:1fr auto;gap:6px 16px}
+    .fila p,.fila .t{grid-column:1}
+    .fila .precio{grid-row:1;grid-column:2}
+    .fila .reservar{grid-column:2;grid-row:2 / span 2;align-self:center}
+  }
+  @media (max-width:560px){
+    body{font-size:16px}
+    .seguimiento,.panel{padding:20px}
+    .matricula input{font-size:20px;letter-spacing:.08em;padding:0 10px}
+    .matricula button{padding:0 12px;font-size:14px}
+    .datos-portada{gap:24px}
+    .item{grid-template-columns:14px 1fr;}
+    .item span{grid-column:2}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{transition-duration:.01ms!important;animation:none!important}
+    .js .rev{opacity:1;transform:none}
+    html{scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+<div class="aviso-ficticio">Proyecto de portfolio · Garaje Nueve es un taller ficticio creado por Casa Iglesias</div>
+
+<header class="menu">
+  <div class="envoltura">
+    <a class="marca" href="#"><i>9</i>Garaje Nueve</a>
+    <nav>
+      <a href="#seguimiento">Mi coche</a>
+      <a href="#servicios">Precios</a>
+      <a href="#mantenimiento">¿Qué le toca?</a>
+      <a class="btn peq" href="#cita">Pedir cita</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="portada" id="seguimiento">
+    <div class="envoltura portada-rejilla">
+      <div>
+        <p class="etiqueta" style="color:var(--gris-claro)">Taller mecánico · La Laguna, Tenerife</p>
+        <h1 style="margin-top:20px"><span>Tu coche,</span><span class="amarillo">sin sorpresas</span><span>en la factura.</span></h1>
+        <p class="entrada">Te decimos el precio antes de tocar nada y puedes seguir la reparación desde el móvil, paso a paso, como un pedido.</p>
+        <div class="datos-portada">
+          <div><b>24 h</b>Diagnóstico</div>
+          <div><b>12 meses</b>Garantía</div>
+          <div><b>0 €</b>Sin tu OK</div>
+        </div>
+      </div>
+
+      <div class="seguimiento" id="panel-seg">
+        <h3>¿Cómo va mi coche?</h3>
+        <p>Escribe tu matrícula y mira en qué paso está.</p>
+        <form class="matricula" id="form-mat">
+          <span class="eu" aria-hidden="true"><i>★★★</i>E</span>
+          <input id="mat" value="" placeholder="1234 ABC" maxlength="8" aria-label="Matrícula" autocomplete="off">
+          <button type="submit">Ver</button>
+        </form>
+        <p class="pista-demo">Prueba con la matrícula de ejemplo: <button type="button" id="demo-mat">4821 LKM</button></p>
+        <div class="estado" id="estado" aria-live="polite">
+          <div class="coche"><b id="coche-nombre">—</b><span id="coche-mat">—</span></div>
+          <div class="barra-prog"><i id="prog"></i></div>
+          <div class="prog-txt"><span id="prog-paso">—</span><span id="prog-listo">—</span></div>
+          <ol class="pasos-rep" id="pasos-rep"></ol>
+          <div class="aprobar" id="aprobar">
+            <p>Hemos encontrado las <b>pastillas de freno delanteras</b> gastadas. Cambiarlas: <b>89 €</b> (pieza y mano de obra).</p>
+            <div><button class="btn" id="btn-aprobar">Aprobar 89 €</button><a class="btn linea" href="#cita">Prefiero hablarlo</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Servicios -->
+  <section id="servicios">
+    <div class="envoltura">
+      <div class="srv-cab">
+        <div>
+          <p class="etiqueta rev">Precios cerrados</p>
+          <h2 class="rev" style="margin-top:14px">Lo que cuesta, <em>antes.</em></h2>
+        </div>
+        <div class="rev">
+          <p class="etiqueta" style="margin-bottom:10px">Tu motor</p>
+          <div class="motores" id="motores">
+            <button aria-pressed="true" data-m="gasolina">Gasolina</button>
+            <button aria-pressed="false" data-m="diesel">Diésel</button>
+            <button aria-pressed="false" data-m="hibrido">Híbrido</button>
+            <button aria-pressed="false" data-m="electrico">Eléctrico</button>
+          </div>
+        </div>
+      </div>
+      <div class="tabla" id="tabla"></div>
+      <p class="nota-tabla">Precios con IGIC incluido para un turismo medio. Si tu coche necesita otra cosa, te llamamos antes.</p>
+    </div>
+  </section>
+
+  <!-- Mantenimiento -->
+  <section id="mantenimiento" class="mant">
+    <div class="envoltura mant-rejilla">
+      <div>
+        <p class="etiqueta rev">Calculadora de mantenimiento</p>
+        <h2 class="rev" style="margin-top:14px">¿Qué le <em style="color:var(--senal)">toca</em> a tu coche?</h2>
+        <div class="mant-form rev">
+          <label>Kilómetros
+            <div class="odometro"><input type="range" id="km" min="0" max="250000" step="5000" value="95000" aria-label="Kilómetros"><output id="km-out">95.000</output></div>
+          </label>
+          <label>Año de matriculación
+            <div class="odometro"><input type="range" id="anio" min="2006" max="2026" step="1" value="2016" aria-label="Año"><output id="anio-out">2016</output></div>
+          </label>
+          <label>Última revisión hace
+            <div class="odometro"><input type="range" id="ult" min="0" max="36" step="1" value="14" aria-label="Meses desde la última revisión"><output id="ult-out">14 meses</output></div>
+          </label>
+        </div>
+      </div>
+      <div class="rev">
+        <div class="semaforo" id="semaforo"></div>
+        <div class="resumen-mant">
+          <p id="resumen-mant">—</p>
+          <a class="btn" href="#cita" id="btn-mant">Pedir cita para esto</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cita -->
+  <section id="cita">
+    <div class="envoltura cita-rejilla">
+      <div>
+        <p class="etiqueta rev">Cita online</p>
+        <h2 class="rev" style="margin-top:14px">Déjalo por la mañana, <em>recógelo</em> por la tarde.</h2>
+        <div class="promesas rev">
+          <div><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#141619" stroke-width="1.6"><path d="M3 11l5 5L19 5"/></svg><div><b>Precio antes de tocar</b><p>Nada se cambia sin tu OK desde el móvil.</p></div></div>
+          <div><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#141619" stroke-width="1.6"><path d="M3 11l5 5L19 5"/></svg><div><b>Te enseñamos la pieza</b><p>La que cambiamos, te la guardamos para que la veas.</p></div></div>
+          <div><svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="#141619" stroke-width="1.6"><path d="M3 11l5 5L19 5"/></svg><div><b>Coche de cortesía</b><p>Si la reparación dura más de un día.</p></div></div>
+        </div>
+      </div>
+      <div class="panel rev">
+        <div class="bloque"><h3>1 · Servicio</h3><select class="campo" id="c-srv" aria-label="Servicio"></select></div>
+        <div class="bloque"><h3>2 · Día</h3><div class="fichas" id="c-dias"></div></div>
+        <div class="bloque"><h3>3 · Hora de entrega</h3><div class="fichas" id="c-horas"><p style="font-size:14px;color:var(--gris)">Elige antes el día.</p></div></div>
+        <div class="bloque"><h3>4 · Matrícula</h3><input class="campo" id="c-mat" placeholder="1234 ABC" maxlength="8" style="font-family:var(--mono);text-transform:uppercase;letter-spacing:.1em"></div>
+        <div class="res-cita"><p id="c-res"><span>Tu cita aparecerá aquí.</span></p><button class="btn" id="c-ok" aria-disabled="true">Confirmar cita</button></div>
+        <p class="ok-cita" id="ok-cita">Demostración de portfolio: no se ha guardado ninguna cita. En una web real, la cita entraría en la agenda del taller y te llegaría un recordatorio el día antes.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="envoltura">
+    <div><b>Garaje Nueve</b>Taller ficticio · La Laguna, Tenerife</div>
+    <div>Proyecto de portfolio<br>Diseño y desarrollo: Casa Iglesias</div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+  const calma = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const obs = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visto"); obs.unobserve(e.target); } }), { threshold: .12 });
+  $$(".rev").forEach(el => obs.observe(el));
+
+  /* ---------- Seguimiento por matrícula ---------- */
+  const COCHES = ["Seat León 1.5 TSI", "Toyota Corolla Hybrid", "Renault Clio dCi", "Volkswagen Golf", "Kia Niro", "Peugeot 208"];
+  const PASOS = [
+    ["Recibido en el taller", "Lo dejaste a las 8:40. Llaves en el casillero 12."],
+    ["Diagnóstico", "Revisión completa y prueba en carretera."],
+    ["Presupuesto enviado", "Te hemos escrito con lo que necesita y el precio."],
+    ["Reparando", "Cambio de aceite, filtros y pastillas."],
+    ["Control de calidad", "Segunda revisión y lavado exterior."],
+    ["Listo para recoger", "Te avisamos por WhatsApp."]
+  ];
+  const HORAS = ["8:40", "10:15", "11:02", "—", "—", "—"];
+  let pasoActual = 2, aprobado = false;
+  const normal = v => v.toUpperCase().replace(/[^0-9A-Z]/g, "").replace(/^(\d{4})([A-Z]{3})$/, "$1 $2");
+  const pintarEstado = () => {
+    const ol = $("#pasos-rep");
+    ol.innerHTML = PASOS.map(([t, d], i) => {
+      const cls = i < pasoActual ? "hecho" : i === pasoActual ? "ahora" : "";
+      const hora = i < pasoActual ? HORAS[i] : i === pasoActual ? "Ahora" : "";
+      return `<li class="${cls}"><span class="punto"></span><div><b>${t}</b><small>${d}</small></div><time>${hora}</time></li>`;
+    }).join("");
+    const pct = Math.round(pasoActual / (PASOS.length - 1) * 100);
+    requestAnimationFrame(() => $("#prog").style.width = pct + "%");
+    $("#prog-paso").textContent = `Paso ${pasoActual + 1} de ${PASOS.length}`;
+    $("#prog-listo").textContent = pasoActual >= 5 ? "¡Listo!" : "Listo hoy ≈ 17:30";
+    $("#aprobar").classList.toggle("si", pasoActual === 2 && !aprobado);
+  };
+  const buscar = v => {
+    const m = normal(v); if (!m) return;
+    $("#mat").value = m;
+    let h = 0; for (const c of m) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+    $("#coche-nombre").textContent = m === "4821 LKM" ? "Seat León 1.5 TSI" : COCHES[h % COCHES.length];
+    $("#coche-mat").textContent = m;
+    pasoActual = m === "4821 LKM" ? 2 : 1 + h % 4; aprobado = false;
+    $("#estado").classList.add("si");
+    pintarEstado();
+  };
+  $("#form-mat").addEventListener("submit", e => { e.preventDefault(); buscar($("#mat").value); });
+  $("#demo-mat").onclick = () => buscar("4821 LKM");
+  $("#btn-aprobar").onclick = () => {
+    aprobado = true; HORAS[2] = "11:02"; pasoActual = 3;
+    const ahora = new Date(); HORAS[3] = ahora.getHours() + ":" + String(ahora.getMinutes()).padStart(2, "0");
+    pintarEstado();
+    // Simulación: el coche avanza solo mientras miras
+    if (!calma) setTimeout(() => { pasoActual = 4; pintarEstado(); }, 4000);
+  };
+
+  /* ---------- Servicios según motor ---------- */
+  const SRV = [
+    { n: "Cambio de aceite", d: "Aceite, filtro de aceite y revisión de 20 puntos.", t: "45 min", p: { gasolina: 79, diesel: 89, hibrido: 85, electrico: null } },
+    { n: "Revisión completa", d: "Filtros, líquidos, frenos, luces y diagnosis electrónica.", t: "2 h", p: { gasolina: 169, diesel: 189, hibrido: 179, electrico: 99 } },
+    { n: "Pastillas de freno", d: "Eje delantero, pieza de primera marca incluida.", t: "1 h", p: { gasolina: 89, diesel: 89, hibrido: 95, electrico: 95 } },
+    { n: "Pre-ITV", d: "Revisamos lo que mira la ITV para que pases a la primera.", t: "40 min", p: { gasolina: 29, diesel: 29, hibrido: 29, electrico: 29 } },
+    { n: "Aire acondicionado", d: "Carga de gas y comprobación de fugas.", t: "1 h", p: { gasolina: 69, diesel: 69, hibrido: 79, electrico: 79 } },
+    { n: "Batería de alto voltaje", d: "Diagnóstico del estado de salud de la batería.", t: "1 h", p: { gasolina: null, diesel: null, hibrido: 59, electrico: 59 } }
+  ];
+  let motor = "gasolina";
+  const pintarTabla = () => {
+    $("#tabla").innerHTML = SRV.map(s => {
+      const p = s.p[motor];
+      return `<div class="fila ${p == null ? "no" : ""}"><h3>${s.n}</h3><p>${p == null ? "No aplica a tu motor." : s.d}</p><span class="t">${s.t}</span><span class="precio">${p == null ? "—" : p + " €"}</span><button class="reservar" data-s="${s.n}">Reservar</button></div>`;
+    }).join("");
+    $$("#tabla .reservar").forEach(b => b.onclick = () => { $("#c-srv").value = b.dataset.s; actualizarCita(); $("#cita").scrollIntoView({ behavior: calma ? "auto" : "smooth" }); });
+    rellenarServicios();
+  };
+  $$("#motores button").forEach(b => b.onclick = () => { motor = b.dataset.m; $$("#motores button").forEach(x => x.setAttribute("aria-pressed", x === b)); pintarTabla(); });
+
+  /* ---------- Mantenimiento ---------- */
+  const km = $("#km"), anio = $("#anio"), ult = $("#ult");
+  const fmt = n => n.toLocaleString("es-ES");
+  let pendientes = [];
+  const calcularMant = () => {
+    const K = +km.value, A = +anio.value, U = +ult.value, edad = 2026 - A;
+    $("#km-out").textContent = fmt(K); $("#anio-out").textContent = A; $("#ult-out").textContent = U + (U === 1 ? " mes" : " meses");
+    const items = [];
+    // Aceite: cada 15.000 km o 12 meses
+    items.push(U >= 12 ? ["rojo", "Cambio de aceite", `Hace ${U} meses de la última revisión: toca cada 12.`, "Ya"] : U >= 9 ? ["ambar", "Cambio de aceite", "Te toca en los próximos meses.", "Pronto"] : ["verde", "Cambio de aceite", "Al día.", "OK"]);
+    // Distribución: 120.000 km o 8 años
+    const dist = K >= 120000 || edad >= 8;
+    items.push(dist ? ["rojo", "Correa de distribución", "Pasados 120.000 km u 8 años, conviene cambiarla.", "Revisar"] : K >= 100000 ? ["ambar", "Correa de distribución", `Te quedan unos ${fmt(120000 - K)} km.`, "Pronto"] : ["verde", "Correa de distribución", "Todavía lejos.", "OK"]);
+    // Frenos: cada ~40.000 km
+    const resto = K % 40000;
+    items.push(resto >= 34000 ? ["ambar", "Pastillas de freno", "Suelen durar unos 40.000 km.", "Pronto"] : ["verde", "Pastillas de freno", "Revisión visual en la próxima visita.", "OK"]);
+    // ITV
+    const itv = edad < 4 ? ["verde", "ITV", "Tu coche aún no necesita ITV.", "OK"] : edad <= 10 ? ["ambar", "ITV", "Cada 2 años. Hacemos la pre-ITV por 29 €.", "Cada 2 años"] : ["rojo", "ITV", "Más de 10 años: toca cada año.", "Anual"];
+    items.push(itv);
+    // Neumáticos
+    items.push(K >= 50000 && (K / 5000) % 10 >= 8 ? ["ambar", "Neumáticos", "Mira el dibujo: el mínimo legal es 1,6 mm.", "Mirar"] : ["verde", "Neumáticos", "Rotarlos cada 10.000 km alarga su vida.", "OK"]);
+    const orden = { rojo: 0, ambar: 1, verde: 2 };
+    items.sort((a, b) => orden[a[0]] - orden[b[0]]);
+    $("#semaforo").innerHTML = items.map(([c, t, d, s]) => `<div class="item ${c}"><i></i><div><b>${t}</b><small>${d}</small></div><span>${s}</span></div>`).join("");
+    pendientes = items.filter(i => i[0] === "rojo").map(i => i[1]);
+    const n = pendientes.length;
+    $("#resumen-mant").innerHTML = n ? `Tienes <b>${n} ${n === 1 ? "cosa urgente" : "cosas urgentes"}</b>. Te lo revisamos todo en una visita.` : "<b>Todo en orden.</b> Te recordamos la próxima revisión.";
+  };
+  [km, anio, ult].forEach(r => r.addEventListener("input", calcularMant));
+  $("#btn-mant").onclick = () => { $("#c-srv").value = pendientes.length ? "Revisión completa" : "Cambio de aceite"; actualizarCita(); };
+
+  /* ---------- Cita ---------- */
+  const DIAS = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+  const cita = { dia: null, hora: null };
+  const rellenarServicios = () => {
+    const sel = $("#c-srv"), antes = sel.value;
+    sel.innerHTML = `<option value="">Elige un servicio</option>` + SRV.filter(s => s.p[motor] != null).map(s => `<option>${s.n}</option>`).join("") + `<option>No sé qué le pasa</option>`;
+    if ([...sel.options].some(o => o.value === antes)) sel.value = antes;
+  };
+  const cajaD = $("#c-dias"), hoy = new Date();
+  for (let i = 1, n = 0; n < 8; i++) {
+    const d = new Date(hoy); d.setDate(hoy.getDate() + i);
+    if (d.getDay() === 0) continue; n++;
+    const b = document.createElement("button");
+    b.className = "ficha"; b.setAttribute("aria-pressed", "false");
+    b.innerHTML = `<small>${DIAS[d.getDay()]}</small>${d.getDate()}`;
+    b.onclick = () => {
+      cita.dia = d; cita.hora = null;
+      [...cajaD.children].forEach(x => x.setAttribute("aria-pressed", x === b));
+      const horas = d.getDay() === 6 ? ["8:00", "9:00", "10:00"] : ["7:30", "8:00", "8:30", "9:00", "15:30", "16:00"];
+      $("#c-horas").innerHTML = "";
+      horas.forEach(h => {
+        const bt = document.createElement("button"); bt.className = "ficha"; bt.textContent = h; bt.setAttribute("aria-pressed", "false");
+        bt.onclick = () => { cita.hora = h; [...$("#c-horas").children].forEach(x => x.setAttribute("aria-pressed", x === bt)); actualizarCita(); };
+        $("#c-horas").appendChild(bt);
+      });
+      actualizarCita();
+    };
+    cajaD.appendChild(b);
+  }
+  const actualizarCita = () => {
+    const s = $("#c-srv").value, m = normal($("#c-mat").value);
+    const fecha = cita.dia ? `${DIAS[cita.dia.getDay()]} ${cita.dia.getDate()}` : "";
+    const partes = [s, fecha && "el " + fecha, cita.hora && "a las " + cita.hora, m].filter(Boolean);
+    const falta = !s ? "Elige un servicio." : !cita.dia ? "Elige el día." : !cita.hora ? "¿A qué hora lo traes?" : !m ? "Falta la matrícula." : "";
+    $("#c-res").innerHTML = (partes.length ? partes.join(" · ") + ". " : "") + (falta ? `<span>${falta}</span>` : "");
+    $("#c-ok").setAttribute("aria-disabled", falta ? "true" : "false");
+  };
+  $("#c-srv").addEventListener("change", actualizarCita);
+  $("#c-mat").addEventListener("input", actualizarCita);
+  $("#c-ok").onclick = () => $("#ok-cita").classList.add("si");
+
+  pintarTabla(); calcularMant(); actualizarCita();
+})();
+</script>
+</body>
+</html>
